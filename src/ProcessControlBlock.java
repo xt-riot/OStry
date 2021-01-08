@@ -30,14 +30,14 @@ public class ProcessControlBlock {
         /* DONE: you need to add some code here
          * Hint: update this.state, but also include currentClockTime
          * in startTimes/stopTimes */
-        System.out.println(" state " + state.toString() + " // " + currentClockTime);
+        //System.out.println(" state " + state.toString() + " // " + currentClockTime);
         if(state == ProcessState.RUNNING && this.state != ProcessState.RUNNING) {
             startTimes.add(currentClockTime);
-            System.out.println(" ADDED START TIME: " + currentClockTime);
+            //System.out.println(" ADDED START TIME: " + currentClockTime);
         }
         else if (state != this.state && this.state == ProcessState.RUNNING) {
             stopTimes.add(currentClockTime);
-            System.out.println(" ADDED STOP TIME: " + currentClockTime);
+            //System.out.println(" ADDED STOP TIME: " + currentClockTime);
         }
         this.state = state;
         

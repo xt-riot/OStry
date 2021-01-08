@@ -20,17 +20,19 @@ public class CPU {
 
         while (currentProcess != this.processes.length) {
             System.out.println("\u001b[36mCPU clock: " + clock + "\u001b[0m");
-            for (Process process : this.processes) {
+            /*for (Process process : this.processes) {
                 if (process.getArrivalTime() == clock) {
                     System.out.println("\u001b[31mCPU: Process (" + process.getPCB().getPid() + ") arrived\u001b[0m");
-                    scheduler.addProcess(process);
+
                     if (mmu.loadProcessIntoRAM(process)) {
+                        scheduler.addProcess(process);
                         System.out.println("\u001b[31mCPU: Process (" + process.getPCB().getPid() + ") added in memory at CPU tick: " + clock + ". Changing state to READY..." + "\u001b[0m");
                     }
                 }
                 else if (process.getArrivalTime() < clock && process.getPCB().getState() == ProcessState.NEW) {
                     System.out.println("\u001b[31mCPU: Retrying to load process (" + process.getPCB().getPid() + ") into memory." + "\u001b[0m");
                     if (mmu.loadProcessIntoRAM(process)) {
+                        scheduler.addProcess(process);
                         System.out.println("\u001b[31mCPU: Process (" + process.getPCB().getPid() + ") added in memory. Changing state to READY..." + "\u001b[0m");
                     }
                 }
@@ -40,7 +42,9 @@ public class CPU {
             if(currentProcess != this.processes.length) {
                 this.tick();
                 clock++;
-            }
+            }//*/
+            this.tick();
+            clock++;
         }
 
     }
@@ -48,7 +52,15 @@ public class CPU {
     public void tick() {
         /* DONE: you need to add some code here
          * Hint: this method should run once for every CPU cycle */
-
+        for(Process proc : this.processes) {
+            if (proc.getArrivalTime() <= clock && proc.getPCB().getState() == ProcessState.NEW) {
+                System.out.println("\u001b[31mCPU: Trying to add process (" + proc.getPCB().getPid() + ") in memory.\u001b[0m");
+                if (mmu.loadProcessIntoRAM(proc)) {
+                    scheduler.addProcess(proc);
+                    System.out.println("\u001b[31mCPU: Process (" + proc.getPCB().getPid() + ") added in memory. Changing state to READY..." + "\u001b[0m");
+                }
+            } else if (proc.getArrivalTime() > clock) break;
+        }
         Process nextProcess = scheduler.getNextProcess();
         nextProcess.run();
         if(nextProcess.getPCB().getState() == ProcessState.TERMINATED){
